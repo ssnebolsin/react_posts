@@ -21,11 +21,16 @@ function App() {
       .then(json => setPosts(posts = json))
   }
 
-  const getUsers = () => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => response.json())
-      // .then(json => console.log(json))
-      .then(json => setUsers(users = json))
+  // const getUsers = () => {
+  //   fetch('https://jsonplaceholder.typicode.com/users')
+  //     .then(response => response.json())
+  //     // .then(json => console.log(json))
+  //     .then(json => setUsers(users = json))
+  // }
+
+  const getUsers = async () => {
+    const response = await fetch('https://jsonplaceholder.typicode.com/users')
+    setUsers(users = await response.json())
   }
 
   const inputHandler = () => {
@@ -38,6 +43,7 @@ function App() {
 
   const submitHandler = () => {
     event.preventDefault()
+    
   }
 
   const logout = ()=>{
@@ -52,13 +58,16 @@ function App() {
 
   const login = ()=> {
 
+    getUsers()
     let nameCounter = 0
     let usernameCounter = 0
-    getUsers()
+    // console.log(users)
+        
     users.map((user)=>{
       if(loginData.name === user.name && loginData.username === user.username){
         setIslogged(isLogged=true)
         setUser(user = user.name)
+        getPosts()
       }
       else if(loginData.name === user.name){
         nameCounter+=1
@@ -85,7 +94,7 @@ function App() {
 
   const showLoggingForm = ()=>{
     if(isLogged){
-      getPosts()
+      
       return(
         
         <div>
@@ -114,7 +123,7 @@ function App() {
   }
 
   return (
-    
+
     showLoggingForm()
 
   )
