@@ -56,9 +56,9 @@ function App() {
     )
   }
 
-  const login = ()=> {
+  const login = async ()=> {
 
-    getUsers()
+    await getUsers()
     let nameCounter = 0
     let usernameCounter = 0
     // console.log(users)
