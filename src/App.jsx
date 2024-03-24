@@ -1,32 +1,28 @@
 import { useState } from 'react'
 import './App.css'
-import PostCard from './PostCard'
+
 import AppInput from './AppInput'
 import AppButton from './AppButton'
+import {createBrowserRouter,Outlet,RouterProvider} from "react-router-dom";
+import {Link} from 'react-router-dom'
+import UsersInfo from './routes/UsersInfo'
+
 
 function App() {
 
-  let [posts, setPosts] = useState([])
+ 
   let [loginData, setLoginData] = useState({
     'name':'',
     'username':''
   })
   let [users, setUsers] = useState([])
-  let [user, setUser] = useState('')
+  let [userInfo, setUserInfo] = useState({
+    'userId':'',
+    'userName': ''
+  })
   let [isLogged, setIslogged] = useState(false)
 
-  const getPosts = () => {
-    fetch('https://jsonplaceholder.typicode.com/posts')
-      .then(response => response.json())
-      .then(json => setPosts(posts = json))
-  }
 
-  // const getUsers = () => {
-  //   fetch('https://jsonplaceholder.typicode.com/users')
-  //     .then(response => response.json())
-  //     // .then(json => console.log(json))
-  //     .then(json => setUsers(users = json))
-  // }
 
   const getUsers = async () => {
     const response = await fetch('https://jsonplaceholder.typicode.com/users')
@@ -66,8 +62,14 @@ function App() {
     users.map((user)=>{
       if(loginData.name === user.name && loginData.username === user.username){
         setIslogged(isLogged=true)
-        setUser(user = user.name)
-        getPosts()
+        setUserInfo(
+          userInfo = {
+            'userId': user.id,
+            'userName': user.name
+          }
+          )
+        // console.log(userInfo)
+        // console.log(userInfo.userId)
       }
       else if(loginData.name === user.name){
         nameCounter+=1
@@ -98,15 +100,12 @@ function App() {
       return(
         
         <div>
-           {user}
+           Welcome {userInfo.userName}
+           <br />
            <AppButton value={'logout'} clickHandler = {logout}/>
+            < Link to={`/usersinfo/${userInfo.userId}`}>User's Detailed info</Link>
 
-            {
-              posts.map((item) => (
-                  <PostCard key={item.id} item={item}/>
-                )
-              )
-            }
+          <Outlet/> 
         </div>
       )
     }
